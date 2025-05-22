@@ -10,6 +10,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         # ログ出力を追加してリクエストの詳細を確認
         logging.info(f"Headers: {req.headers}")
         logging.info(f"Body length: {len(req.get_body())}")
+        logging.info(f"Raw body: {req.get_body().decode('utf-8')}")
 
         # JSONデータの取得
         data = req.get_json()
@@ -90,4 +91,5 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     except Exception as e:
         logging.error(f"Error: {str(e)}")
+        print(f"Error: {str(e)}")  # ← 追加
         return func.HttpResponse(f"Error: {str(e)}", status_code=500)
