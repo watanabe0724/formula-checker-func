@@ -7,6 +7,10 @@ import json
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     try:
+        # ログ出力を追加してリクエストの詳細を確認
+        logging.info(f"Headers: {req.headers}")
+        logging.info(f"Body length: {len(req.get_body())}")
+
         # JSONデータの取得
         data = req.get_json()
         m1_code = data.get('m1Code')
@@ -73,10 +77,15 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             "requestNo": request_no
         }
 
+        response_json = json.dumps(response_data)
         return func.HttpResponse(
-            json.dumps(response_data),
+            response_json,
+            status_code=200,
             mimetype="application/json",
-            status_code=200
+            headers={
+                "Content-Type": "application/json",
+                "Content-Length": str(len(response_json.encode('utf-8')))
+            }
         )
 
     except Exception as e:
