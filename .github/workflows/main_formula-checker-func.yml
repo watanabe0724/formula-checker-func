@@ -33,8 +33,7 @@ jobs:
 
       - name: Archive function app
         run: |
-          cd formula_checker_v2
-          zip -r ../functionapp.zip . -x "*.git*" -x "*__pycache__*"
+          zip -r functionapp.zip formula_checker_v2 -x "*.git*" -x "*__pycache__*"
 
       - name: List contents of zip file
         run: unzip -l functionapp.zip
