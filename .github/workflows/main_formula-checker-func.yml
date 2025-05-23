@@ -7,9 +7,8 @@ on:
   workflow_dispatch:
 
 env:
-  ENABLE_ORYX_BUILD: true
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
-  PYTHON_VERSION: '3.10' # set this to the python version to use (supports 3.6, 3.7, 3.8)
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.'
+  PYTHON_VERSION: '3.10'
 
 jobs:
   build-and-deploy:
@@ -22,10 +21,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python version
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt --target="./.python_packages/lib/site-packages"
+
+      - name: Archive function app
+        run: |
+          zip -r functionapp.zip . -x "*.git*" -x "*__pycache__*"
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -34,9 +42,8 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_EAEEE056E8394BDBB4FF6CAE9E446FAD }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_DA5032AFABC34CC29EF26F69DA1CF475 }}
 
-      - name: Deploy to Azure Functions using Oryx
-        uses: Azure/functions-action@v1
+      - name: Deploy to Azure Function App
+        uses: azure/webapps-deploy@v2
         with:
           app-name: 'formula-checker-func'
-          slot-name: 'Production'
-          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          package: functionapp.zip
