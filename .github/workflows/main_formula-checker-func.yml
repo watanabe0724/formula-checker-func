@@ -7,7 +7,6 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.'
   PYTHON_VERSION: '3.10'
 
 jobs:
@@ -41,12 +40,12 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_E9A0888334AC4B3E96792F74392AF421 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_EAEEE056E8394BDBB4FF6CAE9E446FAD }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_DA5032AFABC34CC29EF26F69DA1CF475 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
 
       - name: Deploy to Azure Function App
-        uses: azure/webapps-deploy@v2
+        uses: Azure/functions-action@v1
         with:
           app-name: 'formula-checker-func'
-          package: functionapp.zip
+          package: 'functionapp.zip'
