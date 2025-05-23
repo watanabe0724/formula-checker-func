@@ -42,8 +42,14 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_EAEEE056E8394BDBB4FF6CAE9E446FAD }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_DA5032AFABC34CC29EF26F69DA1CF475 }}
 
+      - name: Stop Azure Function App
+        run: az functionapp stop --name formula-checker-func --resource-group formula-checker-func_group
+
       - name: Deploy to Azure Function App
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'formula-checker-func'
           package: functionapp.zip
+
+      - name: Start Azure Function App
+        run: az functionapp start --name formula-checker-func --resource-group formula-checker-func_group
