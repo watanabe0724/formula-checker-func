@@ -83,10 +83,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             response_json,
             status_code=200,
             mimetype="application/json",
-            headers={
-                "Content-Type": "application/json",
-                "Content-Length": str(len(response_json.encode('utf-8')))
-            }
         )
 
     except Exception as e:
